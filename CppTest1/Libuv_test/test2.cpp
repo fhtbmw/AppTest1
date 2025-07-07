@@ -485,6 +485,8 @@ void test4()
 #include <iostream>
 #include <thread>
 #include <Windows.h>
+#include <mutex>
+#include <memory>
 
 #define WM_USER1 (WM_USER + 1)
 #define WM_USER2 (WM_USER + 2)
@@ -492,14 +494,21 @@ void test4()
 HWND hwnd;
 HANDLE hevent;
 DWORD dwWait;
-int g_itimer;
+mutex _mu;
+
+int g_itimer = 0;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-	case WM_USER1:
-		std::cout << "Received WM_USER1 in WndProc\n";
+	case WM_TIMER:
+		if (wParam == 1)  // 检查定时器ID
+		{
+			std::lock_guard<mutex> lg(_mu);
+			g_itimer++;
+			InvalidateRect(hwnd, NULL, TRUE);  // 触发重绘
+		}
 		break;
 
 	case WM_USER2:
@@ -512,17 +521,30 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_PAINT:
 	{
+		std::lock_guard<mutex> lg(_mu);
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
 
+		// 清除背景
+		RECT rect;
+		GetClientRect(hwnd, &rect);
+		FillRect(hdc, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+
+		// 绘制当前计时器值
 		std::string st = std::to_string(g_itimer);
 
-		SetTextColor(hdc, RGB(0, 0, 0));
+		if (g_itimer % 10 == 0)
+		{
+			SetTextColor(hdc, RGB(0, 0, 0));
+		}
+		else 
+		{
+			SetTextColor(hdc, RGB(0, 0, 0));
+		}
 		SetBkMode(hdc, TRANSPARENT);
-
 		TextOutA(hdc, 20, 20, st.c_str(), st.length());
+
 		EndPaint(hwnd, &ps);
-		break;
 	}
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -562,36 +584,11 @@ uv_loop_t* CreateMyLoop()
 	return uvloop;
 }
 
-void ThreadFunc1(void* args)
+void TimerCallBack(HWND hwnd, UINT uint, UINT_PTR up, DWORD dw)
 {
-	int iCount = 5;
 
-	dwWait = WaitForSingleObject(hevent, INFINITE);
-	switch (dwWait)
-	{
-	case WAIT_OBJECT_0:
-
-		break;
-
-	case WAIT_FAILED:
-		cerr << "waitsingleobj failed error no: " << GetLastError() << endl;
-		return;
-
-	default:
-		break;
-	}
-
-	while (++iCount < 500)
-	{
-		if (iCount % 10 == 0)
-		{
-			PostMessage(hwnd, WM_USER1, 0, iCount);
-			InvalidateRect(hwnd, NULL, TRUE); 
-		}
-		Sleep(100);
-	}
-
-	PostMessage(hwnd, WM_USER2, 0, 0);
+	PostMessage(hwnd, WM_USER1, 0, 0);
+	InvalidateRect(hwnd, NULL, TRUE);
 }
 
 void ThreadFunc2(void* args)
@@ -603,13 +600,6 @@ void ThreadFunc2(void* args)
 
 	assert(hwnd != NULL);
 
-	/*uv_signal_t ust;
-	uv_loop_t* uvlp = CreateMyLoop();
-
-	uv_signal_init(uvlp, &ust);
-	uv_signal_start(&ust, NULL, WM_USER2);
-	uv_run(uvlp, UV_RUN_DEFAULT);*/
-
 	if (hevent != NULL)
 	{
 		if (SetEvent(hevent) == NULL)
@@ -618,9 +608,10 @@ void ThreadFunc2(void* args)
 		}
 	}
 
+	SetTimer(hwnd, 1, 1000, NULL);
+
 	while ((bret = GetMessage(&msg, NULL, 0, 0)) != 0)  // 监听所有消息
 	{
-		g_itimer = msg.lParam;
 
 		if (bret == -1)
 		{
@@ -631,50 +622,23 @@ void ThreadFunc2(void* args)
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);  // 分发消息到窗口过程
-			if (msg.message == WM_USER1)
-			{
-				cout << g_itimer << "passed " << endl;
-			}
 		}
 	}
+
+	KillTimer(hwnd, 1);
+
+	PostMessage(hwnd, WM_USER2, NULL, 0);
 
 	cout << "GetMsg 0 \n";
 }
 
-void test5() 
-{
-	std::thread t2(std::bind(ThreadFunc2, (void*)"d"));
-	std::thread t1(std::bind(ThreadFunc1, (void*)"c"));
-
-	if (t1.joinable())
-	{
-		t1.join();
-	}
-	if (t2.joinable())
-	{
-		t2.join();
-	}
-
-	DestroyWindow(hwnd);  // 销毁窗口
-}
-
 void test6()
 {
-	hevent = CreateEvent(NULL, TRUE, FALSE, L"event");
-
-	if (hevent == NULL)
-	{
-		cout << "CreateEvent faield errno: " << GetLastError() << endl;
-	}
-
 	uv_thread_t t1, t2;
 
 	uv_thread_create(&t2, ThreadFunc2, 0);
-	uv_thread_create(&t1, ThreadFunc1, 0);
 
-	uv_thread_join(&t1);
 	uv_thread_join(&t2);
-
 }
 
 #ifdef TEST_HOOK_LIBUV
@@ -803,16 +767,6 @@ void test7()
 	uv_thread_join(&t);
 	uv_thread_join(&tt);
 }
-
-#ifdef TEST1
-
-void func1()
-{
-	
-}
-
-#endif
-
 
 #endif
 
