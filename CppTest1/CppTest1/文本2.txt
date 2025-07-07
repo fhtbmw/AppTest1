@@ -1,0 +1,111 @@
+//枚举系统中HID
+
+BOOL Usb_EnumDev(OUT PTCHAR pdevoceName, IN LPGUID pGuid, IN int instance)
+{
+	//获取设备信息集的句柄，其包含本地计算机请求的设备信息元素
+	HDEVINFO info = SetupDiGetClassDevs(pGuid, NULL, NULL, DIGCF_PRESENT |DIGCF_DEVICEINTERFACE);
+
+	if (info == INVALID_HANDLE_VALUE);
+	{
+		cerr << " HDEVINFO failed error no: " << GetLastError() << endl;
+		return FALSE;
+	}
+
+	SP_INTERFACE_DEVICE_DATA ifdata;
+	ifdata.cbSize = sizeof(ifdata);
+	if (!SetupDiEnumDeviceInterfaces(info, NULL, (GUID*)pGuid, instance, &ifdata))	//枚举包含在设备信息集中的设备接口	
+	{
+		_tprintf(TEXT("NO SP_INTERFACE_DEVICE_DATA available for this GUID instance \n"));
+		SetupDiDestroyDeviceInfoList(info);		//删除设备信息并释放相应内存
+		return FALSE;
+	}
+
+	DWORD ReqLen;
+	SetupDiGetDeviceInterfaceDetail(info, &ifdata, NULL, 0, &ReqLen, NULL);		//返回有关设备接口的详细信息
+	PSP_INTERFACE_DEVICE_DETAIL_DATA ifDetail = (PSP_INTERFACE_DEVICE_DETAIL_DATA)(new TCHAR[ReqLen]);	
+
+	if (ifDetail == NULL)
+	{
+		SetupDiDestroyDeviceInfoList(info);
+		return FALSE;
+	}
+
+	memcpy(pdevoceName, ifDetail->DevicePath, _tcslen(ifDetail->DevicePath) * sizeof(TCHAR));
+
+	pdevoceName[_tcslen(ifDetail->DevicePath)] = TEXT('\0');
+
+	delete[] ifDetail;
+	SetupDiDestroyDeviceInfoList(info);
+
+	return TRUE;
+}
+
+
+void main()
+{
+	GUID hidGuid;
+	HidD_GetHidGuid((LPGUID) & hidGuid);
+
+	if (IsEqualGUID(hidGuid, GUID_NULL))
+	{
+		cerr << "invalid guid" << endl;
+		return;
+	}
+
+	wcout << " GUID "<< hidGuid.Data1 << "-" << hidGuid.Data2 << "-" << hidGuid.Data3 << "-" << hidGuid.Data4 << endl;
+
+	for (int i = 0; i < 1; i++)
+	{
+		TCHAR strDevPath[512] = { 0 };
+		if (!Usb_EnumDev(strDevPath, &hidGuid, i))
+		{
+			break;
+		}
+
+		HANDLE DeviceHandle = CreateFile(strDevPath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+
+		if (DeviceHandle == INVALID_HANDLE_VALUE )
+		{
+			if (!DeviceHandle)
+			{
+				CloseHandle(DeviceHandle);
+			}
+			continue;
+		}
+
+		HIDD_ATTRIBUTES hidattribute;
+		ZeroMemory(&hidattribute, sizeof(hidattribute));
+		hidattribute.Size = sizeof(HIDD_ATTRIBUTES);
+		if (!HidD_GetAttributes(DeviceHandle, &hidattribute));	
+		{
+			cerr << " GetAttributes failed ErroNo: " <<GetLastError() << endl;
+			CloseHandle(DeviceHandle);
+			continue;
+		}
+		_tprintf(TEXT("%d, %s \n"), i, strDevPath);
+		_tprintf(TEXT("%04x, %04x, %04x"), hidattribute.VendorID, hidattribute.ProductID, hidattribute.VersionNumber);	
+
+		ULONG ulBuffersize = 128;
+		TCHAR tcPorduceString[128] = { 0 };
+		if (!HidD_GetProductString(DeviceHandle, tcPorduceString, ulBuffersize))
+		{
+			CloseHandle(DeviceHandle);
+			continue;
+		}
+
+		PHIDP_PREPARSED_DATA PreparsedData;
+		if (!HidD_GetPreparsedData(DeviceHandle, &PreparsedData))
+		{
+			CloseHandle(DeviceHandle);
+			continue;
+		}
+
+		PHIDP_CAPS phidpcaps;
+		if (!HidP_GetCaps(PreparsedData, phidpcaps))
+		{
+			CloseHandle(DeviceHandle);
+			continue;
+		}
+	}
+}

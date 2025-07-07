@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{15c96ab8-22dd-4b7d-9b8c-921d0730d8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NewFilter1\win">
+      <UniqueIdentifier>{639f2cc4-e84b-4aab-ae84-1faf901772fc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="win\async.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\core.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\detect-wakeup.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\dl.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\error.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\fs.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\fs-event.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\getaddrinfo.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\getnameinfo.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\handle.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\loop-watcher.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\pipe.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\poll.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\process.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\process-stdio.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\signal.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\snprintf.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\stream.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\tcp.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\thread.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\tty.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\udp.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\util.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\winapi.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="win\winsock.c">
+      <Filter>NewFilter1\win</Filter>
+    </ClCompile>
+    <ClCompile Include="fs-poll.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="idna.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="inet.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="random.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="strscpy.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="strtok.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="thread-common.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="threadpool.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="uv-common.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="uv-data-getter-setters.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="version.c">
+      <Filter>NewFilter1</Filter>
+    </ClCompile>
+    <ClCompile Include="test2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="win\atomicops-inl.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\fs-fd-hash-inl.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\handle-inl.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\internal.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\req-inl.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\stream-inl.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\winapi.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="win\winsock.h">
+      <Filter>NewFilter1\win</Filter>
+    </ClInclude>
+    <ClInclude Include="heap-inl.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="idna.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="strscpy.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="strtok.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="uv-common.h">
+      <Filter>NewFilter1</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Libuv_test.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+</Project>
