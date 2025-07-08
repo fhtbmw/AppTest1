@@ -535,7 +535,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		if (g_itimer % 10 == 0)
 		{
-			SetTextColor(hdc, RGB(0, 0, 0));
+			SetTextColor(hdc, RGB(45, 25, 200));
 		}
 		else 
 		{
