@@ -9,7 +9,7 @@
 #include <functional>
 #include <assert.h>
 
-#define TEST_BASICMUTATINGALGORITHMS
+#define TEST_ITERATOR
 
 using namespace std;
 
@@ -913,10 +913,38 @@ void test10()
 
 #endif
 
+template<typename _IN>
+void OutPut(_IN start, _IN end)
+{
+	std::copy(start, end, ostream_iterator<int>(cout, " "));
+	cout << endl;
+}
+
+#ifdef TEST_ITERATOR
+
+void test11()
+{
+	list<int> l1{1,3,5};
+
+	insert_iterator<list<int>> li(l1, l1.end());
+
+	*li++ = 7;
+	*li++ = 9;
+
+	/*std::copy(l1.begin(), l1.end(), ostream_iterator<int>(cout, " "));
+	cout << endl;*/
+
+	OutPut<list<int>::iterator>(l1.begin(), l1.end());
+
+}
+
+#endif
+
 void main()
 {
 	//tt();
-	test5_1();
+	//test5_1();
+	test11();
 }
 
 

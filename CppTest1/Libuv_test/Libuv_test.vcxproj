@@ -138,9 +138,11 @@
     <ClCompile Include="strscpy.c" />
     <ClCompile Include="strtok.c" />
     <ClCompile Include="test1.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="test2.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="test2.cpp" />
     <ClCompile Include="thread-common.c" />
     <ClCompile Include="threadpool.c" />
     <ClCompile Include="timer.c" />
