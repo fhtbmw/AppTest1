@@ -256,13 +256,39 @@ void testTrans()
 	Func(vtNum1.data(), vtNum1.size());
 }
 
+struct SS
+{
+	BYTE cbnum1;
+	WORD cbnum2;
+	BYTE cbnum3;
+};
+
+struct SS2
+{
+	BYTE cbnum1;
+	BYTE cbnum3;
+	WORD cbnum2;
+};
+
+void print(const LPBYTE lpdata, const DWORD dwsize)
+{
+	SS s;
+	memcpy(&s, lpdata, dwsize);
+
+}
+
 void main()
 {
 	/*std::vector<uint8_t> vtNum1{0x04, 0xc3, 0x01,0x4d, 0x2d, 0x56, 0x4d, 0x38, 0x30, 0x30, 0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	vtNum1.erase(std::remove(vtNum1.begin(), vtNum1.end(), 0), vtNum1.end());
 	HexToAscll(vtNum1);*/
 
-	testTrans();
+	SS s1;
+	SS2 s2;
+
+	cout << sizeof(s1) << " " << sizeof(s2) << endl;
+
+
 }
 
 
