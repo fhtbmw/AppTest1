@@ -277,18 +277,68 @@ void print(const LPBYTE lpdata, const DWORD dwsize)
 
 }
 
+std::string test3(const std::string& strVidPid)
+{
+
+	auto itPos = strVidPid.find("vid");
+
+	auto itPosAttach = strVidPid.find("}");
+
+	return strVidPid.substr(itPos, 5) + strVidPid.substr(itPosAttach + 1, strVidPid.size() - itPosAttach);
+}
+
+struct S1
+{
+	BYTE cb1 = 1;
+	BYTE cb2 = 2;
+	BYTE cbnum[3] = {0, 0, 7};
+	BYTE cb3 = 4;
+};
+
+struct S2
+{
+	BYTE cbnum[6];
+};
+
+void test4()
+{
+	S1 s1; S2 s2;
+	CopyMemory(&s2.cbnum[2], &s1.cbnum[1], 3);
+
+	int i, j;
+	//cout << endl;
+
+	vector<BYTE> vtNum1(10, 0);
+
+	CopyMemory(&vtNum1[1], &s2, sizeof(s2));
+
+
+}
+
+void test5()
+{
+	S2 s2 = { 0 };
+
+	
+}
+
 void main()
 {
 	/*std::vector<uint8_t> vtNum1{0x04, 0xc3, 0x01,0x4d, 0x2d, 0x56, 0x4d, 0x38, 0x30, 0x30, 0x4c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	vtNum1.erase(std::remove(vtNum1.begin(), vtNum1.end(), 0), vtNum1.end());
 	HexToAscll(vtNum1);*/
 
-	SS s1;
+	/*SS s1;
 	SS2 s2;
 
-	cout << sizeof(s1) << " " << sizeof(s2) << endl;
+	cout << sizeof(s1) << " " << sizeof(s2) << endl;*/
+	test4();
+	
+	WORD wdata;
 
+	print((LPBYTE)&wdata, sizeof(WORD));
 
+	test5();
 }
 
 

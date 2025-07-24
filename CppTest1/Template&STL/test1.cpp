@@ -8,8 +8,9 @@
 #include <memory>
 #include <functional>
 #include <assert.h>
+#include <numeric>
 
-#define TEST_ITERATOR
+#define TEST_CONTAINER
 
 using namespace std;
 
@@ -936,15 +937,178 @@ void test11()
 
 	OutPut<list<int>::iterator>(l1.begin(), l1.end());
 
+	reverse_copy(l1.begin(), l1.end(), ostream_iterator<int>(cout, " "));
+
+}
+
+void test12()
+{
+	const int N = 22;
+	int ia[N] = { 3,12,3,23,12,23,12,2 };
+
+	list<int>l1{ ia, ia + 6 };
+
+	std::copy(reverse_iterator<list<int>::iterator>(l1.end()),
+			reverse_iterator<list<int>::iterator>(l1.begin()),	//倒序复制到输出迭代器，first last 颠倒
+			ostream_iterator<int>(cout, " "));
+	cout << endl;
+
+	auto pos = std::find(reverse_iterator<list<int>::iterator>(l1.end()),
+						reverse_iterator <list<int>::iterator>(l1.begin()),
+						12).base();		//base: 前移一个位置
+
+	cout << *pos << endl;
+	
+	list<int>::reverse_iterator::value_type;
+
+}
+
+void test13()
+{
+	vector<int> vtNum = { 2,3,4,3 };
+	vector<int> vtNum2 = { -2,-3,-4,-3 };
+	vector<int> vtNum3 = { -2,-3,-4,-3 };
+	
+
+	int* a = (int*)malloc(vtNum.size() * sizeof(int));
+
+	transform(vtNum.begin(), vtNum.end(),
+		raw_storage_iterator<int*, int>(a),
+		negate<int>());
+
+	transform(vtNum.begin(), vtNum.end(),
+		vtNum2.begin(), vtNum3.begin(),
+		plus<int>());
+
+	partial_sum(vtNum2.begin(), vtNum2.end(), 
+		vtNum3.begin(), multiplies<int>());
+
+	transform(vtNum3.begin(), vtNum3.end(),
+		vtNum3.begin(), bind2nd(modulus<int>(), 2));	//modulus 将区间内元素替换成取模后的余数
+
+	partition(vtNum.begin(), vtNum.end(), bind2nd(equal_to<int>(), 0));		//partition将满足func的元素排在不满足元素之前
+	
+	//partition(vtNum.begin(), vtNum.end(), bind2nd(equal<int>(), ));
+
+
+}
+
+void test14()
+{
+	vector<int>vtnum1{ 0,1,2,3,4,0,0,0 };
+
+	vtnum1.erase(std::remove(vtnum1.begin(), vtnum1.begin()+5, 0), vtnum1.end());
+
+	std::copy(vtnum1.begin(), vtnum1.end(), ostream_iterator<int>(cout, ""));
+	std::cout << endl;
+
+	transform(vtnum1.begin(), vtnum1.end(), vtnum1.begin(), negate<int>());
+
+	auto pos = partition(vtnum1.begin(), vtnum1.end(),
+		[](int n)
+		{
+			return n < 0;
+		});
+
+	vtnum1.erase(pos, vtnum1.end());
+	
+	list<uint8_t> l1{0,0,0x03,0x02,0x03,0,0,0xac};
+	list<int> l2{0,0,3,2,3,0,0,9};
+
+	list<uint8_t>::iterator it = std::find_if(l1.begin(), l1.end(), bind2nd( not_equal_to<uint8_t>(),0));
+
+	std::copy(it, l1.end(), ostream_iterator<int>(cout, ""));
+	std::cout << endl;
+
+	std::sort(vtnum1.begin(), vtnum1.end(), less<int>());
+	std::copy(vtnum1.begin(), vtnum1.end(), ostream_iterator<int>(cout, " "));
+
+}
+	
+class Base
+{
+public:
+	virtual void print() = 0;
+};
+
+class C1 : public Base
+{
+public:
+	
+	virtual void print()
+	{
+		cout << "C1 \n";
+	}
+
+};
+
+class C2 : public Base 
+{
+public:
+
+	virtual void print()
+	{
+		cout << "C2 \n";
+	}
+
+};
+
+void test15()
+{
+	hash<const char*>h1;
+	cout << " f -> " << h1("f") << endl;
+	cout << " h -> " << h1("h") << endl;
+
+	vector<Base*>vt1{new C2};
+	vt1.push_back(new C1);
+
+	for_each(vt1.begin(), vt1.end(), mem_fun(&Base::print));
 }
 
 #endif
+
+#ifdef TEST_CONTAINER
+
+
+void test16()
+{
+	vector<int> vtnum1{ 1,2,3,5,0,-2,4 };
+	vector<int>::iterator it = std::find(vtnum1.begin(), vtnum1.end(), -2);
+	
+	it = vtnum1.begin();
+
+	cout << vtnum1.data() << endl;
+
+	vtnum1.push_back(3);
+	vtnum1.push_back(6);
+	vtnum1.push_back(33);
+
+	cout << vtnum1.data() << endl;  // 添加新元素，重新分配地址给容器，之前的迭代器失效
+	
+	typedef typename vector<int>::value_type ty;
+
+	cout << typeid(ty).name() << endl;
+
+	cout << "front " << vtnum1.front() << " back " << vtnum1.back();
+
+	list<int> l1{ -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16, -17, -18, -19, -20 };
+
+
+	vtnum1.assign(l1.begin(), l1.end());
+	cout << "front " << vtnum1.front() << " back " << vtnum1.back();
+
+}
+
+
+#endif // TEST_CONTAINER
 
 void main()
 {
 	//tt();
 	//test5_1();
-	test11();
+	//test15();
+	test16();
 }
 
 
+	
